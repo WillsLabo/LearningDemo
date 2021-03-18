@@ -118,6 +118,7 @@ FVector ABoid::Cohesion()
 FVector ABoid::Separation()
 {
 	FVector DirectionAwayFromCrowd = FVector::ZeroVector;
+	float counter = 0.f;
 
 	if (Boids.Num() > 0) {
 		for (AActor* actor : Boids) {
@@ -127,9 +128,12 @@ FVector ABoid::Separation()
 			if (distanceToOther < SeparationLength) {
 				if (distanceToOther == 0.f) distanceToOther = 0.000001f;
 				DirectionAwayFromCrowd += directionFromOther.GetSafeNormal() * (SeparationRate / distanceToOther);
+				counter++;
 			}
 		}
-		DirectionAwayFromCrowd /= Boids.Num();
+		if (counter > 0.f){
+			DirectionAwayFromCrowd /= counter;
+		}
 	}
 
 	return DirectionAwayFromCrowd.GetSafeNormal() * SeparationRate;
